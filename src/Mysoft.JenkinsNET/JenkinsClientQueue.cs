@@ -1,5 +1,4 @@
 ﻿using Mysoft.JenkinsNET.Exceptions;
-using Mysoft.JenkinsNET.Internal.Commands;
 using Mysoft.JenkinsNET.Models;
 using System;
 using System.Threading;
@@ -15,12 +14,11 @@ namespace Mysoft.JenkinsNET
     /// </remarks>
     public sealed class JenkinsClientQueue
     {
-        private readonly IJenkinsContext context;
+        private readonly JenkinsHttpClient httpClient;
 
-
-        internal JenkinsClientQueue(IJenkinsContext context)
+        internal JenkinsClientQueue(JenkinsHttpClient httpClient)
         {
-            this.context = context;
+            this.httpClient = httpClient;
         }
 
         /// <summary>
@@ -29,34 +27,15 @@ namespace Mysoft.JenkinsNET
         /// <exception cref="JenkinsNetException"></exception>
         public JenkinsQueueItem[] GetAllItems()
         {
-            try {
-                var cmd = new QueueItemListCommand(context);
-                cmd.Run();
-                return cmd.Result;
+            try
+            {
+                return httpClient.QueueItemListCommand().Result;
             }
-            catch (Exception error) {
+            catch (Exception error)
+            {
                 throw new JenkinsNetException("Failed to retrieve queue item list!", error);
             }
         }
-
-    #if NET_ASYNC
-        /// <summary>
-        /// Retrieves all items from the Job-Queue asynchronously.
-        /// </summary>
-        /// <param name="token">An optional token for aborting the request.</param>
-        /// <exception cref="JenkinsNetException"></exception>
-        public async Task<JenkinsQueueItem[]> GetAllItemsAsync(CancellationToken token = default(CancellationToken))
-        {
-            try {
-                var cmd = new QueueItemListCommand(context);
-                await cmd.RunAsync(token);
-                return cmd.Result;
-            }
-            catch (Exception error) {
-                throw new JenkinsNetException("Failed to retrieve queue item list!", error);
-            }
-        }
-    #endif
 
         /// <summary>
         /// Retrieves an item from the Job-Queue.
@@ -65,34 +44,14 @@ namespace Mysoft.JenkinsNET
         /// <exception cref="JenkinsJobBuildException"></exception>
         public JenkinsQueueItem GetItem(int itemNumber)
         {
-            try {
-                var cmd = new QueueGetItemCommand(context, itemNumber);
-                cmd.Run();
-                return cmd.Result;
+            try
+            {
+                return httpClient.QueueGetItemCommand(itemNumber).Result;
             }
-            catch (Exception error) {
+            catch (Exception error)
+            {
                 throw new JenkinsJobBuildException($"Failed to retrieve queue item #{itemNumber}!", error);
             }
         }
-
-    #if NET_ASYNC
-        /// <summary>
-        /// Retrieves an item from the Job-Queue.
-        /// </summary>
-        /// <param name="itemNumber">The ID of the queue-item.</param>
-        /// <param name="token">An optional token for aborting the request.</param>
-        /// <exception cref="JenkinsJobBuildException"></exception>
-        public async Task<JenkinsQueueItem> GetItemAsync(int itemNumber, CancellationToken token = default(CancellationToken))
-        {
-            try {
-                var cmd = new QueueGetItemCommand(context, itemNumber);
-                await cmd.RunAsync(token);
-                return cmd.Result;
-            }
-            catch (Exception error) {
-                throw new JenkinsJobBuildException($"Failed to retrieve queue item #{itemNumber}!", error);
-            }
-        }
-    #endif
     }
 }

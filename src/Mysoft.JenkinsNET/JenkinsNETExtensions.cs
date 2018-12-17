@@ -8,7 +8,7 @@ namespace Mysoft.JenkinsNET
 {
     public static class JenkinsNETExtensions
     {
-        public static IServiceCollection UseJenkinsNET(this IServiceCollection serviceCollection, string root)
+        public static IServiceCollection UseJenkinsNET(this IServiceCollection serviceCollection, string root, string token)
         {
             return serviceCollection
                 .AddHttpClient<JenkinsHttpClient>("JenkinsNET", c =>
@@ -16,9 +16,7 @@ namespace Mysoft.JenkinsNET
                     c.BaseAddress = new Uri(root);
                     c.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Mysoft JenkinsNET")));
                     c.DefaultRequestHeaders.Connection.Add("keep-alive");
-                    
-
-                    //c.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "");
+                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 })
                 .Services;
         }
