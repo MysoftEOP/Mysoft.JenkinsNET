@@ -13,4 +13,10 @@
     <ProjectReference Include="..\Mysoft.JenkinsNET\Mysoft.JenkinsNET.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="jekins-job-scm-git-template.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

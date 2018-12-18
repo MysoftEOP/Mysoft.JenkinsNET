@@ -56,5 +56,40 @@ namespace Mysoft.JenkinsNET
                 throw new JenkinsJobBuildException($"Failed to build Jenkins Job '{jobName}'!", error);
             }
         }
+
+        /// <summary>
+        /// Gets a Job description from Jenkins.
+        /// </summary>
+        /// <param name="jobName">The Name of the Job to retrieve.</param>
+        /// <exception cref="JenkinsNetException"></exception>
+        public T Get<T>(string jobName) where T : class, IJenkinsJob
+        {
+            try
+            {
+                return httpClient.JobGet<T>(jobName).Result;
+            }
+            catch (Exception error)
+            {
+                throw new JenkinsNetException($"Failed to get Jenkins Job '{jobName}'!", error);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new Job in Jenkins.
+        /// </summary>
+        /// <param name="jobName">The name of the Job to create.</param>
+        /// <param name="job">The description of the Job to create.</param>
+        /// <exception cref="JenkinsNetException"></exception>
+        public void Create(string jobName, JenkinsProject job, string root = null)
+        {
+            try
+            {
+                httpClient.JobCreate(jobName, job, root).Wait();
+            }
+            catch (Exception error)
+            {
+                throw new JenkinsNetException($"Failed to create Jenkins Job '{jobName}'!", error);
+            }
+        }
     }
 }
