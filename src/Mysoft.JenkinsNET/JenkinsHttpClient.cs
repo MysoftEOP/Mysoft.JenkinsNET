@@ -15,13 +15,13 @@ using System.Xml;
 
 namespace Mysoft.JenkinsNET
 {
-    public class JenkinsHttpClient
+    public sealed class JenkinsHttpClient : IJenkinsHttpClient
     {
         private readonly HttpClient _httpClient;
 
         private readonly static string pattern = @"<\?xml[^\>]*\?>";
 
-        internal JenkinsHttpClient(HttpClient httpClient)
+        public JenkinsHttpClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -33,7 +33,7 @@ namespace Mysoft.JenkinsNET
         /// <param name="buildNumber"></param>
         /// <param name="filename"></param>
         /// <returns></returns>
-        internal async Task<MemoryStream> ArtifactGetCommand(string jobName, string buildNumber, string filename)
+        public async Task<MemoryStream> ArtifactGet(string jobName, string buildNumber, string filename)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -67,7 +67,7 @@ namespace Mysoft.JenkinsNET
         /// <param name="jobName"></param>
         /// <param name="buildNumber"></param>
         /// <returns></returns>
-       internal async Task<JenkinsBuildBase> BuildGetCommand(string jobName, string buildNumber)
+        public async Task<JenkinsBuildBase> BuildGet(string jobName, string buildNumber)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -90,7 +90,7 @@ namespace Mysoft.JenkinsNET
         /// <param name="jobName"></param>
         /// <param name="buildNumber"></param>
         /// <returns></returns>
-        internal async Task<string> BuildOutputCommand(string jobName, string buildNumber)
+        public async Task<string> BuildOutput(string jobName, string buildNumber)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -123,7 +123,7 @@ namespace Mysoft.JenkinsNET
         /// <param name="buildNumber"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        internal async Task<JenkinsProgressiveHtmlResponse> BuildProgressiveHtmlCommand(string jobName, string buildNumber, int start)
+        public async Task<JenkinsProgressiveHtmlResponse> BuildProgressiveHtml(string jobName, string buildNumber, int start)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -172,7 +172,7 @@ namespace Mysoft.JenkinsNET
         /// <param name="buildNumber"></param>
         /// <param name="start"></param>
         /// <returns></returns>
-        internal async Task<JenkinsProgressiveTextResponse> BuildProgressiveTextCommand(string jobName, string buildNumber, int start)
+        public async Task<JenkinsProgressiveTextResponse> BuildProgressiveText(string jobName, string buildNumber, int start)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -214,7 +214,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task<JenkinsCrumb> CrumbGetCommand()
+        public async Task<JenkinsCrumb> CrumbGet()
         {
             using (var response = await _httpClient.GetAsync("crumbIssuer/api/xml"))
             {
@@ -226,12 +226,19 @@ namespace Mysoft.JenkinsNET
                         throw new ApplicationException("An empty response was returned!");
                     }
 
-                    return new JenkinsCrumb(document.Root);
+                    var crumb = new JenkinsCrumb(document.Root);
+
+                    if (crumb != null)
+                    {
+                        _httpClient.DefaultRequestHeaders.Add(crumb.CrumbRequestField, crumb.Crumb);
+                    }
+
+                    return crumb;
                 }
             }
         }
 
-        internal async Task<Jenkins> JenkinsGetCommand()
+        public async Task<Jenkins> JenkinsGet()
         {
             using (var response = await _httpClient.GetAsync("api/xml"))
             {
@@ -240,7 +247,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task<JenkinsBuildResult> JobBuildCommand(string jobName)
+        public async Task<JenkinsBuildResult> JobBuild(string jobName)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -259,7 +266,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task<JenkinsBuildResult> JobBuildWithParametersCommand(string jobName, IDictionary<string, string> jobParameters)
+        public async Task<JenkinsBuildResult> JobBuildWithParameters(string jobName, IDictionary<string, string> jobParameters)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -289,7 +296,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task JobCreateCommand(string jobName, JenkinsProject job)
+        public async Task JobCreate(string jobName, JenkinsProject job)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("Value cannot be empty!", nameof(jobName));
@@ -323,7 +330,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task JobDeleteCommand(string jobName)
+        public async Task JobDelete(string jobName)
         {
             if (string.IsNullOrEmpty(jobName))
                 throw new ArgumentException("'jobName' cannot be empty!");
@@ -336,7 +343,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task<JenkinsQueueItem> QueueGetItemCommand(int itemNumber)
+        public async Task<JenkinsQueueItem> QueueGetItem(int itemNumber)
         {
             var url = NetPath.Combine("queue/item", itemNumber.ToString(), "api/xml");
 
@@ -352,7 +359,7 @@ namespace Mysoft.JenkinsNET
             }
         }
 
-        internal async Task<JenkinsQueueItem[]> QueueItemListCommand()
+        public async Task<JenkinsQueueItem[]> QueueItemList()
         {
             using (var response = await _httpClient.GetAsync("queue/api/xml"))
             {
@@ -436,5 +443,67 @@ namespace Mysoft.JenkinsNET
                 writer.Write(encodedValue);
             }
         }
+    }
+
+    public interface IJenkinsHttpClient
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        Task<MemoryStream> ArtifactGet(string jobName, string buildNumber, string filename);
+
+        /// <summary>
+        /// 获取构建任务
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <returns></returns>
+        Task<JenkinsBuildBase> BuildGet(string jobName, string buildNumber);
+
+        /// <summary>
+        /// 获取构建输出
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <returns></returns>
+        Task<string> BuildOutput(string jobName, string buildNumber);
+
+        /// <summary>
+        /// 获取部署过程的Html
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
+        Task<JenkinsProgressiveHtmlResponse> BuildProgressiveHtml(string jobName, string buildNumber, int start);
+
+        /// <summary>
+        /// 获取部署过程的Text
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
+        Task<JenkinsProgressiveTextResponse> BuildProgressiveText(string jobName, string buildNumber, int start);
+
+        Task<JenkinsCrumb> CrumbGet();
+
+        Task<Jenkins> JenkinsGet();
+
+        Task<JenkinsBuildResult> JobBuild(string jobName);
+
+        Task<JenkinsBuildResult> JobBuildWithParameters(string jobName, IDictionary<string, string> jobParameters);
+
+        Task JobCreate(string jobName, JenkinsProject job);
+
+        Task JobDelete(string jobName);
+
+        Task<JenkinsQueueItem> QueueGetItem(int itemNumber);
+
+        Task<JenkinsQueueItem[]> QueueItemList();
     }
 }

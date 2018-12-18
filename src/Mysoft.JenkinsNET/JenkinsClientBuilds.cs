@@ -14,9 +14,9 @@ namespace Mysoft.JenkinsNET
     /// </remarks>
     public sealed class JenkinsClientBuilds
     {
-        private readonly JenkinsHttpClient httpClient;
+        private readonly IJenkinsHttpClient httpClient;
 
-        internal JenkinsClientBuilds(JenkinsHttpClient httpClient)
+        public JenkinsClientBuilds(IJenkinsHttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
@@ -31,7 +31,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.BuildGetCommand(jobName, buildNumber).Result as T;
+                return httpClient.BuildGet(jobName, buildNumber).Result as T;
             }
             catch (Exception error)
             {
@@ -50,7 +50,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.BuildProgressiveTextCommand(jobName, buildNumber, start).Result;
+                return httpClient.BuildProgressiveText(jobName, buildNumber, start).Result;
             }
             catch (Exception error)
             {
@@ -69,7 +69,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.BuildProgressiveHtmlCommand(jobName, buildNumber, start).Result;
+                return httpClient.BuildProgressiveHtml(jobName, buildNumber, start).Result;
             }
             catch (Exception error)
             {

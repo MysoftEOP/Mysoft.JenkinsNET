@@ -1,24 +1,23 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Mysoft.JenkinsNET.Models;
+using Mysoft.JenkinsNET.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Net.Http.Headers;
 using System.Text;
 
 namespace Mysoft.JenkinsNET
 {
     public static class JenkinsNETExtensions
     {
-        public static IServiceCollection UseJenkinsNET(this IServiceCollection serviceCollection, string root, string token)
+        public static IServiceCollection UseJenkinsNET(this IServiceCollection serviceCollection, string root, string userName, string passwordOrToken)
         {
             return serviceCollection
-                .AddHttpClient<JenkinsHttpClient>("JenkinsNET", c =>
-                {
-                    c.BaseAddress = new Uri(root);
-                    c.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(new ProductHeaderValue("Mysoft JenkinsNET")));
-                    c.DefaultRequestHeaders.Connection.Add("keep-alive");
-                    c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                })
-                .Services;
+                .AddTransient<JenkinsClientJobs>()
+                .AddTransient<JenkinsClientBuilds>()
+                .AddTransient<JenkinsClientQueue>()
+                .AddTransient<JenkinsClient>()
+                .AddJenkinsHttpClient(root, userName, passwordOrToken)
+                ;
         }
     }
 }

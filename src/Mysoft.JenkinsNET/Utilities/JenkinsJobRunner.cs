@@ -28,6 +28,8 @@ namespace Mysoft.JenkinsNET.Utilities
     /// </summary>
     public class JenkinsJobRunner
     {
+        public static List<int> TestCounter = new List<int>();
+
         private readonly JenkinsClient client;
         private ProgressiveTextReader textReader;
         private bool isJobStarted;

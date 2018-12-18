@@ -14,9 +14,9 @@ namespace Mysoft.JenkinsNET
     /// </remarks>
     public sealed class JenkinsClientQueue
     {
-        private readonly JenkinsHttpClient httpClient;
+        private readonly IJenkinsHttpClient httpClient;
 
-        internal JenkinsClientQueue(JenkinsHttpClient httpClient)
+        public JenkinsClientQueue(IJenkinsHttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
@@ -29,7 +29,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.QueueItemListCommand().Result;
+                return httpClient.QueueItemList().Result;
             }
             catch (Exception error)
             {
@@ -46,7 +46,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.QueueGetItemCommand(itemNumber).Result;
+                return httpClient.QueueGetItem(itemNumber).Result;
             }
             catch (Exception error)
             {

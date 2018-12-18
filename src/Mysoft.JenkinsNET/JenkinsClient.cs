@@ -26,12 +26,12 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         public JenkinsClientQueue Queue { get; }
 
-        private readonly JenkinsHttpClient httpClient;
+        private readonly IJenkinsHttpClient httpClient;
 
         /// <summary>
         /// Creates a new Jenkins Client.
         /// </summary>
-        public JenkinsClient(JenkinsHttpClient httpClient, JenkinsClientJobs jobs, JenkinsClientBuilds builds, JenkinsClientQueue queue)
+        public JenkinsClient(IJenkinsHttpClient httpClient, JenkinsClientJobs jobs, JenkinsClientBuilds builds, JenkinsClientQueue queue)
         {
             Jobs = jobs;
             Builds = builds;
@@ -47,7 +47,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.JenkinsGetCommand().Result;
+                return httpClient.JenkinsGet().Result;
             }
             catch (Exception error)
             {

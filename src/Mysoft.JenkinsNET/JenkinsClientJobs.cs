@@ -15,9 +15,9 @@ namespace Mysoft.JenkinsNET
     /// </remarks>
     public sealed class JenkinsClientJobs
     {
-        private readonly JenkinsHttpClient httpClient;
+        private readonly IJenkinsHttpClient httpClient;
 
-        internal JenkinsClientJobs(JenkinsHttpClient httpClient)
+        public JenkinsClientJobs(IJenkinsHttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
@@ -31,7 +31,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.JobBuildCommand(jobName).Result;
+                return httpClient.JobBuild(jobName).Result;
             }
             catch (Exception error)
             {
@@ -49,7 +49,7 @@ namespace Mysoft.JenkinsNET
         {
             try
             {
-                return httpClient.JobBuildWithParametersCommand(jobName, jobParameters).Result;
+                return httpClient.JobBuildWithParameters(jobName, jobParameters).Result;
             }
             catch (Exception error)
             {
