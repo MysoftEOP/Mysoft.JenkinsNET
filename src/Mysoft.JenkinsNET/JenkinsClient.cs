@@ -26,12 +26,14 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         public JenkinsClientQueue Queue { get; }
 
+        public JenkinsCrumb Crumb { get; private set; }
+
         private readonly IJenkinsHttpClient httpClient;
 
         /// <summary>
         /// Creates a new Jenkins Client.
         /// </summary>
-        public JenkinsClient(IJenkinsHttpClient httpClient, JenkinsClientJobs jobs, JenkinsClientBuilds builds, JenkinsClientQueue queue)
+        public JenkinsClient(IJenkinsHttpClient httpClient, JenkinsClientJobs jobs, JenkinsClientBuilds builds, JenkinsClientQueue queue, JenkinsAuth authHttpClient)
         {
             Jobs = jobs;
             Builds = builds;

@@ -15,18 +15,38 @@ using System.Xml;
 
 namespace Mysoft.JenkinsNET
 {
-    public sealed class JenkinsAuthHttpClient
+    public sealed class JenkinsAuth
     {
         private readonly HttpClient _httpClient;
 
         private readonly static string pattern = @"<\?xml[^\>]*\?>";
 
-        public JenkinsAuthHttpClient(HttpClient httpClient)
+        private JenkinsCrumb crumb;
+
+        private static readonly object locker = new object();
+
+        public JenkinsAuth(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<JenkinsCrumb> CrumbGet()
+        public JenkinsCrumb TryGetCrumb()
+        {
+            if (crumb == null)
+            {
+                lock (locker)
+                {
+                    if (crumb == null)
+                    {
+                        crumb = GetCrumb().Result;
+                    }
+                }
+            }
+
+            return crumb;
+        }
+
+        private async Task<JenkinsCrumb> GetCrumb()
         {
             using (var response = await _httpClient.GetAsync("crumbIssuer/api/xml"))
             {

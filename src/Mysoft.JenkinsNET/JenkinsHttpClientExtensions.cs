@@ -34,7 +34,7 @@ namespace Mysoft.JenkinsNET
                 })
                 .AddTypedClient<IJenkinsHttpClient, JenkinsHttpClient>()
                 .Services
-                .AddHttpClient<JenkinsAuthHttpClient>("JenkinsNET_Auth", c =>
+                .AddHttpClient<JenkinsAuth>("JenkinsNET_Auth", c =>
                 {
                     c.BaseAddress = new Uri(root);
                     c.DefaultRequestHeaders.Connection.Add("keep-alive");
@@ -42,8 +42,8 @@ namespace Mysoft.JenkinsNET
                 .Services
                 .AddSingleton(provider =>
                 {
-                    var httpClient = provider.GetService<JenkinsAuthHttpClient>();
-                    return httpClient.CrumbGet().Result;
+                    var httpClient = provider.GetService<JenkinsAuth>();
+                    return httpClient.TryGetCrumb();
                 })
                 ;
         }
