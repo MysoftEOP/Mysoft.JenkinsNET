@@ -26,8 +26,6 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         public JenkinsClientQueue Queue { get; }
 
-        public JenkinsCrumb Crumb { get; private set; }
-
         private readonly IJenkinsHttpClient httpClient;
 
         /// <summary>

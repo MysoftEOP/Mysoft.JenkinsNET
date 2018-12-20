@@ -38,6 +38,13 @@ namespace Mysoft.JenkinsNET
                 {
                     c.BaseAddress = new Uri(root);
                     c.DefaultRequestHeaders.Connection.Add("keep-alive");
+
+                    if (string.IsNullOrWhiteSpace(userName) == false && string.IsNullOrWhiteSpace(passwordOrToken) == false)
+                    {
+                        var data = Encoding.UTF8.GetBytes($"{userName}:{passwordOrToken}");
+                        var basicAuthToken = Convert.ToBase64String(data);
+                        c.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthToken);
+                    }
                 })
                 .Services
                 .AddSingleton(provider =>
