@@ -25,11 +25,11 @@ namespace Mysoft.JenkinsNET
         /// Retrieves all items from the Job-Queue.
         /// </summary>
         /// <exception cref="JenkinsNetException"></exception>
-        public JenkinsQueueItem[] GetAllItems()
+        public JenkinsQueueItem[] GetAllItems(string root = null)
         {
             try
             {
-                return httpClient.QueueItemList().Result;
+                return httpClient.QueueItemList(root).Result;
             }
             catch (Exception error)
             {
@@ -42,11 +42,11 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         /// <param name="itemNumber">The ID of the queue-item.</param>
         /// <exception cref="JenkinsJobBuildException"></exception>
-        public JenkinsQueueItem GetItem(int itemNumber)
+        public JenkinsQueueItem GetItem(int itemNumber, string root = null)
         {
             try
             {
-                return httpClient.QueueGetItem(itemNumber).Result;
+                return httpClient.QueueGetItem(itemNumber, root).Result;
             }
             catch (Exception error)
             {

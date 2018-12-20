@@ -45,11 +45,11 @@ namespace Mysoft.JenkinsNET
         /// Gets the root description of the Jenkins node.
         /// </summary>
         /// <exception cref="JenkinsNetException"></exception>
-        public Jenkins Get()
+        public Jenkins Get(string root = null)
         {
             try
             {
-                return httpClient.JenkinsGet().Result;
+                return httpClient.JenkinsGet(root).Result;
             }
             catch (Exception error)
             {

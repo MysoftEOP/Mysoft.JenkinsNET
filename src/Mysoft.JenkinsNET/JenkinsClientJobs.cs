@@ -27,11 +27,11 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         /// <param name="jobName">The name of the Job.</param>
         /// <exception cref="JenkinsJobBuildException"></exception>
-        public JenkinsBuildResult Build(string jobName)
+        public JenkinsBuildResult Build(string jobName, string root = null)
         {
             try
             {
-                return httpClient.JobBuild(jobName).Result;
+                return httpClient.JobBuild(jobName, root).Result;
             }
             catch (Exception error)
             {
@@ -45,11 +45,11 @@ namespace Mysoft.JenkinsNET
         /// <param name="jobName">The name of the Job.</param>
         /// <param name="jobParameters">The collection of parameters for building the job.</param>
         /// <exception cref="JenkinsJobBuildException"></exception>
-        public JenkinsBuildResult BuildWithParameters(string jobName, IDictionary<string, string> jobParameters)
+        public JenkinsBuildResult BuildWithParameters(string jobName, IDictionary<string, string> jobParameters, string root = null)
         {
             try
             {
-                return httpClient.JobBuildWithParameters(jobName, jobParameters).Result;
+                return httpClient.JobBuildWithParameters(jobName, jobParameters, root).Result;
             }
             catch (Exception error)
             {
@@ -62,11 +62,11 @@ namespace Mysoft.JenkinsNET
         /// </summary>
         /// <param name="jobName">The Name of the Job to retrieve.</param>
         /// <exception cref="JenkinsNetException"></exception>
-        public T Get<T>(string jobName) where T : class, IJenkinsJob
+        public T Get<T>(string jobName, string root = null) where T : class, IJenkinsJob
         {
             try
             {
-                return httpClient.JobGet<T>(jobName).Result;
+                return httpClient.JobGet<T>(jobName, root).Result;
             }
             catch (Exception error)
             {

@@ -27,11 +27,11 @@ namespace Mysoft.JenkinsNET
         /// <param name="jobName">The name of the Job.</param>
         /// <param name="buildNumber">The number of the build.</param>
         /// <exception cref="JenkinsJobGetBuildException"></exception>
-        public T Get<T>(string jobName, string buildNumber) where T : class, IJenkinsBuild
+        public T Get<T>(string jobName, string buildNumber, string root = null) where T : class, IJenkinsBuild
         {
             try
             {
-                return httpClient.BuildGet(jobName, buildNumber).Result as T;
+                return httpClient.BuildGet(jobName, buildNumber, root).Result as T;
             }
             catch (Exception error)
             {
@@ -46,11 +46,11 @@ namespace Mysoft.JenkinsNET
         /// <param name="buildNumber">The number of the build.</param>
         /// <param name="start">The character position to begin reading from.</param>
         /// <exception cref="JenkinsNetException"></exception>
-        public JenkinsProgressiveTextResponse GetProgressiveText(string jobName, string buildNumber, int start)
+        public JenkinsProgressiveTextResponse GetProgressiveText(string jobName, string buildNumber, int start, string root = null)
         {
             try
             {
-                return httpClient.BuildProgressiveText(jobName, buildNumber, start).Result;
+                return httpClient.BuildProgressiveText(jobName, buildNumber, start, root).Result;
             }
             catch (Exception error)
             {
@@ -65,11 +65,11 @@ namespace Mysoft.JenkinsNET
         /// <param name="buildNumber">The number of the build.</param>
         /// <param name="start">The character position to begin reading from.</param>
         /// <exception cref="JenkinsNetException"></exception>
-        public JenkinsProgressiveHtmlResponse GetProgressiveHtml(string jobName, string buildNumber, int start)
+        public JenkinsProgressiveHtmlResponse GetProgressiveHtml(string jobName, string buildNumber, int start, string root = null)
         {
             try
             {
-                return httpClient.BuildProgressiveHtml(jobName, buildNumber, start).Result;
+                return httpClient.BuildProgressiveHtml(jobName, buildNumber, start, root).Result;
             }
             catch (Exception error)
             {
