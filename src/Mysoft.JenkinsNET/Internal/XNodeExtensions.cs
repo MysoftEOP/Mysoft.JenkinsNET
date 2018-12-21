@@ -12,10 +12,16 @@ namespace Mysoft.JenkinsNET.Internal
         public static T GetValue<T>(this XNode parentNode, string expression)
         {
             var node = parentNode.XPathEvaluate(expression);
-            if (node == null) throw new ApplicationException($"Unable to locate node '{expression}'!");
+            if (node == null)
+            {
+                throw new ApplicationException($"Unable to locate node '{expression}'!");
+            }
 
             var value = GetNodeValue(node);
-            if (value == null) throw new ApplicationException("Unable to get node value!");
+            if (value == null)
+            {
+                throw new ApplicationException("Unable to get node value!");
+            }
 
             return value.To<T>();
         }
@@ -24,14 +30,21 @@ namespace Mysoft.JenkinsNET.Internal
         {
             var node = parentNode.XPathEvaluate(expression);
             var value = GetNodeValue(node);
-            if (string.IsNullOrEmpty(value)) return defaultValue;
+            if (string.IsNullOrEmpty(value))
+            {
+                return defaultValue;
+            }
+
             return value.To<T>();
         }
 
         public static T Wrap<T>(this XNode parentNode, string expression, Func<XElement, T> wrapFunc)
         {
             var node = parentNode.XPathSelectElement(expression);
-            if (node == null) return default(T);
+            if (node == null)
+            {
+                return default(T);
+            }
 
             return wrapFunc(node);
         }
@@ -45,12 +58,17 @@ namespace Mysoft.JenkinsNET.Internal
 
         private static string GetNodeValue(object node)
         {
+            object tmpNode = null;
+
             if (node is IEnumerable)
-                node = ((IEnumerable)node)
+            {
+                tmpNode = (node as IEnumerable)
                     .Cast<object>()
                     .FirstOrDefault();
+            }
 
-            switch (node) {
+            switch (tmpNode)
+            {
                 case null:
                     return null;
                 case XElement _e:
