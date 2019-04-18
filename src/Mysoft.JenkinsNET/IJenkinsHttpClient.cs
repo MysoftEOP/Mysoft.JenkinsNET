@@ -27,6 +27,15 @@ namespace Mysoft.JenkinsNET
         Task<JenkinsBuildBase> BuildGet(string jobName, string buildNumber, string root = null);
 
         /// <summary>
+        /// 停止构建任务
+        /// </summary>
+        /// <param name="jobName"></param>
+        /// <param name="buildNumber"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
+        Task BuildStop(string jobName, int buildNumber, string root = null);
+
+        /// <summary>
         /// 获取构建输出
         /// </summary>
         /// <param name="jobName"></param>
@@ -62,6 +71,8 @@ namespace Mysoft.JenkinsNET
 
         Task JobCreate(string jobName, JenkinsProject job, string root = null);
 
+        Task JobUpdate(string jobName, JenkinsProject job, string root = null);
+
         Task JobDelete(string jobName, string root = null);
 
         Task<JenkinsQueueItem> QueueGetItem(int itemNumber, string root = null);
@@ -69,5 +80,7 @@ namespace Mysoft.JenkinsNET
         Task<JenkinsQueueItem[]> QueueItemList(string root = null);
 
         Task<T> JobGet<T>(string jobName, string root = null) where T : class, IJenkinsJob;
+
+        Task QueueCancel(int itemNumber);
     }
 }

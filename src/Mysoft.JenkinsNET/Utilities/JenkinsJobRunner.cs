@@ -24,7 +24,7 @@ namespace Mysoft.JenkinsNET.Utilities
     /// </summary>
     public class JenkinsJobRunner
     {
-        private readonly JenkinsClient client;
+        private readonly IJenkinsClient client;
         private ProgressiveTextReader textReader;
         private bool isJobStarted;
 
@@ -77,7 +77,7 @@ namespace Mysoft.JenkinsNET.Utilities
         /// <summary>
         /// Creates a new JobRunner using the provided Jenkins-Client.
         /// </summary>
-        public JenkinsJobRunner(JenkinsClient client)
+        public JenkinsJobRunner(IJenkinsClient client)
         {
             this.client = client ?? throw new ArgumentNullException(nameof(client));
         }
@@ -222,7 +222,10 @@ namespace Mysoft.JenkinsNET.Utilities
             {
                 StatusChanged?.Invoke();
             }
-            catch { }
+            catch
+            {
+                //预防订阅时间中出错,吃掉异常
+            }
         }
     }
 }

@@ -53,5 +53,17 @@ namespace Mysoft.JenkinsNET
                 throw new JenkinsJobBuildException($"Failed to retrieve queue item #{itemNumber}!", error);
             }
         }
+
+        public void CancelItem(int itemNumber)
+        {
+            try
+            {
+                httpClient.QueueCancel(itemNumber).Wait();
+            }
+            catch (Exception error)
+            {
+                throw new JenkinsJobBuildException($"Failed to cancel queue item #{itemNumber}!", error);
+            }
+        }
     }
 }

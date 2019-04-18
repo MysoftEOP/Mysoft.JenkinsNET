@@ -13,10 +13,10 @@ namespace Mysoft.JenkinsNET
         /// <summary>
         /// The URL of the Queue reference item.
         /// </summary>
-        public string QueueItemUrl {get; internal set;}
+        public string QueueItemUrl {get; set;}
 
 
-        internal JenkinsBuildResult() {}
+        public JenkinsBuildResult() {}
 
         /// <summary>
         /// Gets the unique item number for the Queue reference item.

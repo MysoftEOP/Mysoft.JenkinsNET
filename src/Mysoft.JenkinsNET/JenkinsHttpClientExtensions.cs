@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Mysoft.JenkinsNET
 {
-    public static class JenkinsHttpClientExtensions
+    internal static class JenkinsHttpClientExtensions
     {
-        public static IServiceCollection AddJenkinsHttpClient(this IServiceCollection serviceCollection, string root, string userName, string passwordOrToken)
+        internal static IServiceCollection AddJenkinsHttpClient(this IServiceCollection serviceCollection, string root, string userName, string passwordOrToken)
         {
             return serviceCollection
                 .AddHttpClient("JenkinsNET", (provider, c) =>

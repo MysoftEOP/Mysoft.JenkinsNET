@@ -54,7 +54,7 @@ namespace Mysoft.JenkinsNET.Models
         public bool? Cancelled => Node?.TryGetValue<bool?>("cancelled");
 
 
-        internal JenkinsQueueItem(XNode node)
+        public JenkinsQueueItem(XNode node)
         {
             this.Node = node;
         }

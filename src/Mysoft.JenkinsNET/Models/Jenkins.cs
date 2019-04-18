@@ -71,7 +71,7 @@ namespace Mysoft.JenkinsNET.Models
         public bool? UseSecurity => Node?.TryGetValue<bool?>("useSecurity");
 
 
-        internal Jenkins(XNode node)
+        public Jenkins(XNode node)
         {
             this.Node = node;
         }

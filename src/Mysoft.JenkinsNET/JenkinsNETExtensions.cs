@@ -15,7 +15,7 @@ namespace Mysoft.JenkinsNET
                 .AddTransient<JenkinsClientJobs>()
                 .AddTransient<JenkinsClientBuilds>()
                 .AddTransient<JenkinsClientQueue>()
-                .AddTransient<JenkinsClient>()
+                .AddTransient<IJenkinsClient, JenkinsClient>()
                 .AddJenkinsHttpClient(root, userName, passwordOrToken)
                 ;
         }

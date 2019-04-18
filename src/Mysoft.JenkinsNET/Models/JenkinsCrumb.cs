@@ -28,8 +28,7 @@ namespace Mysoft.JenkinsNET.Models
         /// </summary>
         public string CrumbRequestField => Node?.TryGetValue<string>("crumbRequestField");
 
-
-        internal JenkinsCrumb(XNode node)
+        public JenkinsCrumb(XNode node)
         {
             this.Node = node;
         }

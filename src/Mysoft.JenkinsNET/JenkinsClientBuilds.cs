@@ -39,6 +39,18 @@ namespace Mysoft.JenkinsNET
             }
         }
 
+        public void Stop(string jobName, int buildNumber, string root = null)
+        {
+            try
+            {
+                httpClient.BuildStop(jobName, buildNumber, root).Wait();
+            }
+            catch (Exception error)
+            {
+                throw new JenkinsJobGetBuildException($"Failed to stop build #{buildNumber} of Jenkins Job '{jobName}'!", error);
+            }
+        }
+
         /// <summary>
         /// Gets the progressive text output from a Jenkins Job Build.
         /// </summary>

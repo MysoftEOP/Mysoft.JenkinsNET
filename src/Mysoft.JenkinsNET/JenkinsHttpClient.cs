@@ -85,12 +85,66 @@ namespace Mysoft.JenkinsNET
                 throw new ArgumentException("'buildNumber' cannot be empty!");
             }
 
-            var url = NetPath.Combine(root, "job", jobName, buildNumber, "api/xml");
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, buildNumber, "api/xml");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, buildNumber, "api/xml");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, buildNumber, "api/xml");
+                }
+            }
 
             using (var response = await _httpClient.PostAsync(url, null))
             {
                 var document = await ReadXml(response);
                 return new JenkinsBuildBase(document.Root);
+            }
+        }
+
+        public async Task BuildStop(string jobName, int buildNumber, string root = null)
+        {
+            if (string.IsNullOrEmpty(jobName))
+            {
+                throw new ArgumentException("'jobName' cannot be empty!");
+            }
+
+            var strBuildNumber = buildNumber.ToString();
+
+            if (string.IsNullOrEmpty(strBuildNumber))
+            {
+                throw new ArgumentException("'buildNumber' cannot be empty!");
+            }
+
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, strBuildNumber, "stop");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, strBuildNumber, "stop");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, strBuildNumber, "stop");
+                }
+            }
+
+            using (var response = await _httpClient.PostAsync(url, null))
+            {
+
             }
         }
 
@@ -280,7 +334,23 @@ namespace Mysoft.JenkinsNET
                 throw new ArgumentException("'jobName' cannot be empty!");
             }
 
-            var url = NetPath.Combine(root, "job", jobName, "build?delay=0sec");
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, "build?delay=0sec");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, "build?delay=0sec");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, "build?delay=0sec");
+                }
+            }
 
             using (var response = await _httpClient.PostAsync(url, null))
             {
@@ -314,7 +384,23 @@ namespace Mysoft.JenkinsNET
             var query = new StringWriter();
             WriteJobParameters(query, _params);
 
-            var url = NetPath.Combine(root, "job", jobName, $"buildWithParameters?{query}");
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, $"buildWithParameters?{query}");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, $"buildWithParameters?{query}");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, $"buildWithParameters?{query}");
+                }
+            }
 
             using (var response = await _httpClient.PostAsync(url, null))
             {
@@ -340,7 +426,80 @@ namespace Mysoft.JenkinsNET
                 throw new ArgumentNullException(nameof(job));
             }
 
-            var url = NetPath.Combine(root, "createItem") + NetPath.Query(new { name = jobName });
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("createItem") + NetPath.Query(new { name = jobName });
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "createItem") + NetPath.Query(new { name = jobName });
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "createItem") + NetPath.Query(new { name = jobName });
+                }
+            }
+
+            var xmlSettings = new XmlWriterSettings
+            {
+                ConformanceLevel = ConformanceLevel.Fragment,
+                Indent = false,
+            };
+
+            var contentData = "";
+
+            using (var sw = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sw, xmlSettings))
+                {
+                    job.Node.WriteTo(writer);
+                }
+
+                contentData = sw.ToString();
+            }
+
+            using (var response = await _httpClient.PostAsync(url, new StringContent(contentData, Encoding.UTF8, "application/xml")))
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    await JobUpdate(jobName, job, root);
+                }
+            }
+        }
+
+        public async Task JobUpdate(string jobName, JenkinsProject job, string root = null)
+        {
+            if (string.IsNullOrEmpty(jobName))
+            {
+                throw new ArgumentException("Value cannot be empty!", nameof(jobName));
+            }
+
+            if (job == null)
+            {
+                throw new ArgumentNullException(nameof(job));
+            }
+
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, "config.xml");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, "config.xml");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, "config.xml");
+                }
+            }
 
             var xmlSettings = new XmlWriterSettings
             {
@@ -373,7 +532,23 @@ namespace Mysoft.JenkinsNET
                 throw new ArgumentException("'jobName' cannot be empty!");
             }
 
-            var url = NetPath.Combine(root, "job", jobName, "doDelete");
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine(jobName, "doDelete");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, "doDelete");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, "doDelete");
+                }
+            }
 
             using (var response = await _httpClient.PostAsync(url, null))
             {
@@ -491,12 +666,46 @@ namespace Mysoft.JenkinsNET
                 throw new ArgumentException("Value cannot be empty!", nameof(jobName));
             }
 
-            var url = NetPath.Combine(root, "job", jobName, "api/xml");
+            string url = null;
+
+            if (string.IsNullOrWhiteSpace(root))
+            {
+                url = NetPath.Combine("job", jobName, "api/xml");
+            }
+            else
+            {
+                if (root.StartsWith("job/") || root.StartsWith("/job/"))
+                {
+                    url = NetPath.Combine(root, "job", jobName, "api/xml");
+                }
+                else
+                {
+                    url = NetPath.Combine("job", root, "job", jobName, "api/xml");
+                }
+            }
 
             using (var response = await _httpClient.GetAsync(url))
             {
                 var document = await ReadXml(response);
                 return Activator.CreateInstance(typeof(T), document.Root) as T;
+            }
+        }
+
+        public async Task QueueCancel(int itemNumber)
+        {
+            var _params = new Dictionary<string, string>()
+            {
+                ["id"] = $"{itemNumber}",
+            };
+
+            var query = new StringWriter();
+            WriteJobParameters(query, _params);
+
+            var url = NetPath.Combine($"queue/cancelItem?{query}");
+
+            using (var response = await _httpClient.PostAsync(url, null))
+            {
+
             }
         }
     }

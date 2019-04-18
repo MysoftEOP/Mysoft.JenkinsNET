@@ -6,25 +6,32 @@ using System.Threading.Tasks;
 
 namespace Mysoft.JenkinsNET
 {
+    public interface IJenkinsClient
+    {
+        JenkinsClientJobs Jobs { get; set; }
+        JenkinsClientBuilds Builds { get; set; }
+        JenkinsClientQueue Queue { get; set; }
+    }
+
     /// <summary>
     /// HTTP-Client for interacting with Jenkins API.
     /// </summary>
-    public class JenkinsClient
+    public class JenkinsClient : IJenkinsClient
     {
         /// <summary>
         /// Group of methods for interacting with Jenkins Jobs.
         /// </summary>
-        public JenkinsClientJobs Jobs { get; }
+        public JenkinsClientJobs Jobs { get; set; }
 
         /// <summary>
         /// Group of methods for interacting with Jenkins Builds.
         /// </summary>
-        public JenkinsClientBuilds Builds { get; }
+        public JenkinsClientBuilds Builds { get; set; }
 
         /// <summary>
         /// Group of methods for interacting with the Jenkins Job-Queue.
         /// </summary>
-        public JenkinsClientQueue Queue { get; }
+        public JenkinsClientQueue Queue { get; set; }
 
         private readonly IJenkinsHttpClient httpClient;
 
