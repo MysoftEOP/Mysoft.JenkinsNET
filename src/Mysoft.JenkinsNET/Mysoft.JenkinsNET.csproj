@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>RDC Team</Authors>
+    <Company>Mysoft</Company>
+    <Product>RDC</Product>
+    <PackageProjectUrl>https://github.com/MysoftEOP/Mysoft.JenkinsNET</PackageProjectUrl>
+    <PackageTags>mysoft jenkins client sdk</PackageTags>
+    <PackageIconUrl>https://rdc.mingyuanyun.com/favicon.ico</PackageIconUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Copyright>https://github.com/MysoftEOP/Mysoft.JenkinsNET/blob/master/LICENSE</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>

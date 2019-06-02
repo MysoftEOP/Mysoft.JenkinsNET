@@ -91,5 +91,17 @@ namespace Mysoft.JenkinsNET
                 throw new JenkinsNetException($"Failed to create Jenkins Job '{jobName}'!", error);
             }
         }
+
+        public void Delete(string jobName, string root = null)
+        {
+            try
+            {
+                httpClient.JobDelete(jobName, root).Wait();
+            }
+            catch (Exception error)
+            {
+                throw new JenkinsNetException($"Failed to delete Jenkins Job '{jobName}'!", error);
+            }
+        }
     }
 }

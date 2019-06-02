@@ -536,7 +536,7 @@ namespace Mysoft.JenkinsNET
 
             if (string.IsNullOrWhiteSpace(root))
             {
-                url = NetPath.Combine(jobName, "doDelete");
+                url = NetPath.Combine("job", jobName, "doDelete");
             }
             else
             {
