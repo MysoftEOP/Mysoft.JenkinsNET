@@ -6,12 +6,14 @@
     <Company>Mysoft</Company>
     <Product>RDC</Product>
     <PackageProjectUrl>https://github.com/MysoftEOP/Mysoft.JenkinsNET</PackageProjectUrl>
-    <PackageTags>mysoft jenkins client sdk</PackageTags>
+    <PackageTags>mysoft jenkins client sdk dotnetcore standard</PackageTags>
     <PackageIconUrl>https://rdc.mingyuanyun.com/favicon.ico</PackageIconUrl>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <Copyright>https://github.com/MysoftEOP/Mysoft.JenkinsNET/blob/master/LICENSE</Copyright>
+    <PackageLicenseUrl>https://github.com/MysoftEOP/Mysoft.JenkinsNET/blob/master/LICENSE</PackageLicenseUrl>
+    <Copyright>© 2019 Mysoft. All Right Reserved</Copyright>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>1.0.1</Version>
+    <Description>A jenkins client sdk.</Description>
   </PropertyGroup>
 
   <ItemGroup>
